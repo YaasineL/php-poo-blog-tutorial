@@ -2,45 +2,23 @@
 
 namespace Controller;
 
-use Exception;
 use Table\ArticleTable;
+use Page;
 
 /**
- * Ce controller permet de gérer / afficher la page
- * article.php
+ * Ce controller est le controller de base,
+ * il contient les paramètre de construction de tout
+ * les controller
  */
-class ArticleController
+class BaseController
 {
-    private ArticleTable $articleTable;
+    protected ArticleTable $articleTable;
 
-    public function __construct(ArticleTable $articleTable)
+    protected Page $page;
+
+    public function __construct(ArticleTable $articleTable, Page $page)
     {
         $this->articleTable = $articleTable;
-    }
-
-    /**
-     * Cette méthode permet d'afficher la page article
-     */
-    public function display(): void
-    {
-        $article = $this->articleTable->findOne($_GET['id']);
-        $pagePath = __DIR__ . '/../../pages/article.php';
-
-        // ob_start démarre l'enregistrement de tout les "echo"
-        // qui peuvent subvenir !
-        ob_start();
-
-        try {
-            require $pagePath;
-        } catch (Exception $exception) {
-            // ob_clean, permet de vider tous ce qui a été
-            // echo
-            ob_clean();
-            require __DIR__ . '/../pages/notFound.php';
-        }
-
-        // ob_get_clean permet de récupérer tout ce qui a été echo
-        // dans une variable
-        echo ob_get_clean();
+        $this->page = $page;
     }
 }
